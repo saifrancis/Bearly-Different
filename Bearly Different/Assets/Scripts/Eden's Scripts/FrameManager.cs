@@ -31,15 +31,15 @@ public class FrameManager : MonoBehaviour
         }
     }
 
-    void Update()
+    /*void Update()
     {
         if (Input.GetKeyDown(KeyCode.D)) //E: will change the button to our controller
         {
             ShowNextFrame();
         }
-    }
+    }*/
 
-    void ShowNextFrame()
+    public void ShowNextFrame()
     {
         GameObject[] currentFrames = currentPage == 1 ? storyFrames1 : storyFrames2;
         GameObject currentPanel = currentPage == 1 ? panel1 : panel2;
