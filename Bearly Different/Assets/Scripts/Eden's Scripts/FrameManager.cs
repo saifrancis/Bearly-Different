@@ -1,72 +1,102 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class StoryPage
+{
+    public GameObject panel;       //E: the page/panel GameObject
+    public GameObject[] frames;    //E: the frames/images on that panel
+}
 
 public class FrameManager : MonoBehaviour
 {
-    [Header("Page 1")]
-    public GameObject panel1;
-    public GameObject[] storyFrames1;
+    [Header("Pages")]
+    public List<StoryPage> pages = new List<StoryPage>(); //E: list of all pages
 
-    [Header("Page 2")]
-    public GameObject panel2;
-    public GameObject[] storyFrames2;
-
-    private int currentIndex = 0;
-    private int currentPage = 1;
+    private int currentPageIndex = 0;                     //E: tracks current page
+    private int[] currentFrameIndices;                    //E: track frame index per page
 
     void Start()
     {
-        //E: disable all frames at start (frame 1 will just always be active)
-        foreach (GameObject img in storyFrames1) img.SetActive(false);
-        foreach (GameObject img in storyFrames2) img.SetActive(false);
-
-        //E: setting panel states
-        panel1.SetActive(true);
-        panel2.SetActive(false);
-
-        //E: show the first frame of page 1
-        if (storyFrames1.Length > 0)
+        //E: disable all panels and all their frames at the start
+        foreach (var page in pages)
         {
-            storyFrames1[0].SetActive(true);
+            page.panel.SetActive(false);
+            foreach (var frame in page.frames)
+                frame.SetActive(false);
+        }
+
+        //E: initialise frame index tracking per page
+        currentFrameIndices = new int[pages.Count];
+
+        //E: show first panel and its first frame
+        if (pages.Count > 0 && pages[0].frames.Length > 0)
+        {
+            pages[0].panel.SetActive(true);
+            pages[0].frames[0].SetActive(true);
         }
     }
 
-    /*void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.D)) //E: will change the button to our controller
-        {
-            ShowNextFrame();
-        }
-    }*/
-
+    //E: called when next is triggered 
     public void ShowNextFrame()
     {
-        GameObject[] currentFrames = currentPage == 1 ? storyFrames1 : storyFrames2;
-        GameObject currentPanel = currentPage == 1 ? panel1 : panel2;
+        //E: get the current page and frame index
+        var page = pages[currentPageIndex];
+        int currentFrame = currentFrameIndices[currentPageIndex];
 
-        if (currentIndex < currentFrames.Length - 1)
+        //E: if more frames remain on this page show next frame
+        if (currentFrame < page.frames.Length - 1)
         {
-            currentIndex++;
-            currentFrames[currentIndex].SetActive(true);
+            currentFrame++;
+            currentFrameIndices[currentPageIndex] = currentFrame;
+            page.frames[currentFrame].SetActive(true);
         }
         else
         {
-            if (currentPage == 1)
+            //E: if there are more pages go to the next one
+            if (currentPageIndex < pages.Count - 1)
             {
-                //E: Go to page 2
-                panel1.SetActive(false);
-                panel2.SetActive(true);
+                page.panel.SetActive(false); //E: hide current page
+                currentPageIndex++;          //E: go to next page
+                var nextPage = pages[currentPageIndex];
+                nextPage.panel.SetActive(true); //E: show new page
 
-                currentPage = 2;
-                currentIndex = 0;
-
-                if (storyFrames2.Length > 0)
-                    storyFrames2[0].SetActive(true);
+                //E: show first frame of new page
+                int frameIndex = currentFrameIndices[currentPageIndex];
+                if (nextPage.frames.Length > 0)
+                    nextPage.frames[frameIndex].SetActive(true);
             }
             else
             {
-                Debug.Log("End of story"); //E: we can add logic 
+                Debug.Log("End of story"); //E: last page reached
             }
+        }
+    }
+
+    //E: called when back is triggered 
+    public void ShowPreviousPage()
+    {
+        if (currentPageIndex > 0)
+        {
+            //E: hide current page
+            pages[currentPageIndex].panel.SetActive(false);
+
+            //E: go back to previous page
+            currentPageIndex--;
+
+            //E: show previous page
+            var prevPage = pages[currentPageIndex];
+            prevPage.panel.SetActive(true);
+
+            //E: show current frame on that page and track progress
+            int frameIndex = currentFrameIndices[currentPageIndex];
+            if (prevPage.frames.Length > 0)
+                prevPage.frames[frameIndex].SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Already on first page"); //E: can't go back further
         }
     }
 }

@@ -1465,24 +1465,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3585f8d82a67af14fb527a42404deebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel1: {fileID: 659594347}
-  storyFrames1:
-  - {fileID: 281496958}
-  - {fileID: 163438336}
-  - {fileID: 1407966046}
-  - {fileID: 144844841}
-  - {fileID: 383355553}
-  - {fileID: 729301614}
-  - {fileID: 831548711}
-  panel2: {fileID: 1486749758}
-  storyFrames2:
-  - {fileID: 786630534}
-  - {fileID: 1323874280}
-  - {fileID: 1337960105}
-  - {fileID: 37509857}
-  - {fileID: 220303096}
-  - {fileID: 1856578706}
-  - {fileID: 505318304}
+  pages:
+  - panel: {fileID: 659594347}
+    frames:
+    - {fileID: 281496958}
+    - {fileID: 163438336}
+    - {fileID: 1407966046}
+    - {fileID: 144844841}
+    - {fileID: 383355553}
+    - {fileID: 729301614}
+    - {fileID: 831548711}
+  - panel: {fileID: 1486749758}
+    frames:
+    - {fileID: 786630534}
+    - {fileID: 1323874280}
+    - {fileID: 1337960105}
+    - {fileID: 37509857}
+    - {fileID: 220303096}
+    - {fileID: 1856578706}
+    - {fileID: 505318304}
 --- !u!4 &1202263932
 Transform:
   m_ObjectHideFlags: 0
